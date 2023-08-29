@@ -1,0 +1,37 @@
+Infrastructure as Code:
+
+Process to manage infrastructure and provisioning using code by not doing it manually and automating the process. 
+Code should be written to describe what is to be configured and the desired state. Earlier, before IaC managed infrastructure, companies used to pay a huge sum at every stage of building that infrastructure, from network engineers to hardware technicians. 
+The need for documentation is also fully eliminated because the code acts as the documentation that states the state of the machine, meaning the documentation will always be up-to-date. 
+
+Terraform:
+
+Terraform is an infrastructure as code tool that lets you define both cloud and on-prem resources in human-readable configuration files that you can version, reuse, and share.
+Terraform can manage low-level components like compute, storage, and networking resources, as well as high-level components like DNS entries and SaaS features.
+Terraform is a declarative tool further simplifying the user experience by allowing users to specify the expected state of resources without the need to specify the exact steps to achieve the desired state of resources. 
+Terraform manages how the infrastructure needs to be modified to achieve the desired result.
+Terraform can be used with any supported provider, Terraform accompolishes this by interacting with API's of cloud providers.
+
+WorkFlow:
+
+Terraform workflow consists of three stages:
+    1. Write: The first stage of the workflow is where users create the configurations to define or modify the underlying resources. 
+        You define resources, which may be across multiple cloud providers and services. For example, you might create a configuration to deploy an application on virtual machines
+    2. Plan: Terraform will look at the configuration files and create an execution plan. It enables users to see the exact charges that will going to happen to the underlying infrastructure from what new resources are getting created, resourced, modified, and deleted.
+    3. Apply:  On approval, Terraform performs the proposed operations in the correct order, respecting any resource dependencies.
+        Terraform uses the state to keep track of all the changes to the infrastructure and detect config drifts. It will create a state file at the initial execution and subsequently update the state file with new changes. 
+        This state file can be stored locally or in a remote-backed system like an s3 bucket. 
+
+Terraform plan Symbols:
+
+When running a terraform plan command, the symbols used in the output indicate the changes.
+most common symbols and their meanings:
+
++ indicates a new resource that will be created.
+- indicates a resource that will be deleted.
+~ indicates a resource that will be modified in-place.
+<= indicates that a resource will be read during the operation.
+=> indicates that a resource will be created during the operation.
+Additionally, you may see other symbols such as ? or ! which indicate an error or warning message, respectively.
+
+
