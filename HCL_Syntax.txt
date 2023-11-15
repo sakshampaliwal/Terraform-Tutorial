@@ -1,0 +1,152 @@
+HCL(HashiCorp Configuration Language):
+- HashiCorp Configuration Language (HCL) is a structured configuration language developed by HashiCorp, a company known for creating various infrastructure automation tools like Terraform, Consul, Vault, and Nomad. 
+- Declarative: HCL describes the desired state of infrastructure, rather than the steps to reach that state. This makes it easier to read and understand, and it also makes it easier to make changes to the configuration.
+- HCL supports the use of variables to parameterize configurations, making it easier to reuse and customize configurations.
+- HCL supports various data types such as strings, numbers, lists, and maps, providing flexibility in defining configurations.
+- HCL keeps track of the state of the infrastructure in a state file. This file is used to determine what changes need to be applied on subsequent runs and helps maintain the desired state.
+
+Comments: Lines starting with a hash # symbol are treated as comments and are ignored by the interpreter.
+
+Basic Syntax:
+block_type "block_name" {
+  # Block content, which includes configuration options and nested blocks
+}
+
+block_type: This represents the type of block you want to define, such as provider, resource, variable, data, etc.
+"block_name": This is the name given to the block, and it is used to identify the block within the configuration.
+
+Resource: A resource is a block used to define and manage infrastructure components within a cloud provider or other infrastructure service.
+resource "provider_type" "resource_name" {
+  # Configuration options for the resource
+  attribute1 = value1
+  attribute2 = value2
+  # ...
+}
+
+provider_type: This specifies the resource provider (e.g., aws, azurerm, google, etc.) responsible for managing the resource.
+resource_name: A local name given to the resource block, which can be used to reference this resource within the Terraform configuration.
+
+Assignments: To set a value to a particular key, use the = symbol.
+Strings: Strings are written within double quotes "".
+Lists: Lists are used to define arrays of values. They are represented using square brackets [], and individual elements are separated by commas. 
+For example:
+variable "<VAR_NAME>" {
+  type = list[<ELEMENT_TYPE>]
+  default = [<DEFAULT_ELEMENTS>]
+}
+
+
+Variables:
+- Variables are declared in Terraform using the variable keyword.
+Syntax:
+
+variable "variable_name" {
+  type        = datatype
+  default     = default_value
+  description = "A description of the variable."
+}
+
+type: Specifies the data type of the variable. Common types include string, number, list, map, etc.
+default: Optional. Provides a default value for the variable. If not specified, the variable becomes required.
+description: Optional. Adds a description to the variable for documentation purposes.
+
+Variable values:
+
+1.Variable definition file: You can define variable values in a separate file with a .tfvars extension. For example, variables.tfvars:
+2.Command Line: You can also set variables using the -var option when running Terraform commands.
+  E.g: 
+  ```bash
+  terraform apply -var="variable_name=value"
+  ```
+
+Accessing Variable:
+
+variable "example_variable" {
+  type    = string
+  default = "Hello, World!"
+}
+
+resource "example_resource" "example_instance" {
+  name = var.example_variable
+  # other resource configurations...
+}
+
+other e.g:
+
+variable "width" {
+  type    = number
+  default = 10
+}
+
+variable "height" {
+  type    = number
+  default = 5
+}
+
+resource "example_resource" "example_instance" {
+  area = var.width * var.height
+  # other resource configurations...
+}
+
+Output Variable:
+
+- It serves the purpose of exposing selected values or computed results from your infrastructure as outputs, making them accessible after a Terraform apply.
+- After running terraform apply, the outputs are displayed in the terminal. This can be useful for quickly obtaining information about the provisioned resources, such as IP addresses, URLs, or other attributes.
+
+e.g:
+resource "aws_instance" "example_instance" {
+  ami           = "ami-0123456789abcdef0"
+  instance_type = "t2.micro"
+}
+
+output "public_ip" {
+  value       = aws_instance.example_instance.public_ip
+  description = "Public IP address of the created instance"
+}
+
+Note: When you're working with multiple modules in Terraform, you might have scenarios where one module needs to use the output from another module. To reference an output variable from another module, you use the syntax:
+      module.module_name.output_name
+      module: it is a keyword
+      module_name: This is the name you gave to the module in which the output variable is defined.
+      output_name: This is the name of the output variable you want to reference in the specified module.
+
+    E.g:
+
+-> In network module (network.tf)
+resource "aws_vpc" "main" {
+  // ... (VPC configuration)
+}
+
+output "vpc_id" {
+  value = aws_vpc.main.id
+}
+
+-> In your root module or another module
+module "network_module" {
+  source = "./modules/network"
+}
+
+resource "aws_subnet" "example_subnet" {
+  vpc_id = module.network_module.vpc_id
+  // ... (subnet configuration)
+}
+
+Conditional Expression:
+
+Syntax: condition ? true_val : false_val
+
+true_val: If the condition is true, the value after the ? is returned.
+false_val: If the condition is false, the value after the : is returned.
+
+E.g:
+variable "environment" {
+  type    = string
+  default = "production"
+}
+
+resource "aws_instance" "example_instance" {
+  ami           = var.environment == "production" ? "ami-prod" : "ami-dev"
+  instance_type = var.environment == "production" ? "t2.large" : "t2.micro"
+}
+
+
